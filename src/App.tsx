@@ -39,107 +39,106 @@ const UNITS: Unit[] = [
   }
 ];
 
-// 3D Procedural Architectural Apartment Layout (64m² 2-Bedroom Model)
-function ApartmentModel() {
+// High-Fidelity 3D Architectural Apartment Model (64m² 2-Bedroom Layout)
+function ApartmentScene() {
   return (
     <group position={[0, 0, 0]}>
-      {/* Main Floor Slab */}
+      {/* Foundation Base Slab */}
       <mesh position={[0, -0.05, 0]} receiveShadow>
-        <boxGeometry args={[8, 0.1, 6]} />
+        <boxGeometry args={[8.2, 0.1, 6.2]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.6} />
+      </mesh>
+
+      {/* Flooring Zones */}
+      {/* Living & Dining Area */}
+      <mesh position={[-1.6, 0.01, 0]} receiveShadow>
+        <boxGeometry args={[4.6, 0.02, 5.8]} />
+        <meshStandardMaterial color="#1e293b" roughness={0.3} />
+      </mesh>
+      {/* Master Bedroom Flooring */}
+      <mesh position={[2.4, 0.01, 1.5]} receiveShadow>
+        <boxGeometry args={[3.2, 0.02, 2.7]} />
+        <meshStandardMaterial color="#334155" roughness={0.5} />
+      </mesh>
+      {/* Second Bedroom / Office Flooring */}
+      <mesh position={[2.4, 0.01, -1.5]} receiveShadow>
+        <boxGeometry args={[3.2, 0.02, 2.7]} />
         <meshStandardMaterial color="#334155" roughness={0.5} />
       </mesh>
 
-      {/* Living Room / Flooring Zone */}
-      <mesh position={[-1.5, 0.01, 0]} receiveShadow>
-        <boxGeometry args={[4.8, 0.02, 5.6]} />
-        <meshStandardMaterial color="#cbd5e1" roughness={0.3} />
-      </mesh>
-
-      {/* Bedrooms / Flooring Zone */}
-      <mesh position={[2.4, 0.01, 1.4]} receiveShadow>
-        <boxGeometry args={[3, 0.02, 2.8]} />
-        <meshStandardMaterial color="#94a3b8" roughness={0.6} />
-      </mesh>
-      <mesh position={[2.4, 0.01, -1.4]} receiveShadow>
-        <boxGeometry args={[3, 0.02, 2.8]} />
-        <meshStandardMaterial color="#94a3b8" roughness={0.6} />
-      </mesh>
-
-      {/* Outer Walls (Cutaway Architectural Style) */}
+      {/* Outer Perimeter Walls */}
       {/* North Wall */}
-      <mesh position={[0, 0.6, -2.95]} castShadow receiveShadow>
-        <boxGeometry args={[8, 1.2, 0.1]} />
-        <meshStandardMaterial color="#1e293b" />
+      <mesh position={[0, 0.7, -3.05]} castShadow receiveShadow>
+        <boxGeometry args={[8.2, 1.4, 0.1]} />
+        <meshStandardMaterial color="#475569" roughness={0.2} />
       </mesh>
       {/* South Wall */}
-      <mesh position={[0, 0.6, 2.95]} castShadow receiveShadow>
-        <boxGeometry args={[8, 1.2, 0.1]} />
-        <meshStandardMaterial color="#1e293b" />
+      <mesh position={[0, 0.7, 3.05]} castShadow receiveShadow>
+        <boxGeometry args={[8.2, 1.4, 0.1]} />
+        <meshStandardMaterial color="#475569" roughness={0.2} />
       </mesh>
       {/* East Wall */}
-      <mesh position={[3.95, 0.6, 0]} castShadow receiveShadow>
-        <boxGeometry args={[0.1, 1.2, 6]} />
-        <meshStandardMaterial color="#1e293b" />
+      <mesh position={[4.05, 0.7, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.1, 1.4, 6.2]} />
+        <meshStandardMaterial color="#475569" roughness={0.2} />
       </mesh>
       {/* West Wall */}
-      <mesh position={[-3.95, 0.6, 0]} castShadow receiveShadow>
-        <boxGeometry args={[0.1, 1.2, 6]} />
-        <meshStandardMaterial color="#1e293b" />
+      <mesh position={[-4.05, 0.7, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.1, 1.4, 6.2]} />
+        <meshStandardMaterial color="#475569" roughness={0.2} />
       </mesh>
 
       {/* Interior Partition Walls */}
-      {/* Bedroom Divider Wall */}
-      <mesh position={[0.9, 0.6, 0]} castShadow receiveShadow>
-        <boxGeometry args={[0.1, 1.2, 5.8]} />
-        <meshStandardMaterial color="#0f172a" />
+      <mesh position={[0.8, 0.7, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.1, 1.4, 6.0]} />
+        <meshStandardMaterial color="#334155" roughness={0.3} />
       </mesh>
-      {/* Between Bedrooms Wall */}
-      <mesh position={[2.4, 0.6, 0]} castShadow receiveShadow>
-        <boxGeometry args={[2.9, 1.2, 0.1]} />
-        <meshStandardMaterial color="#0f172a" />
+      <mesh position={[2.4, 0.7, 0]} castShadow receiveShadow>
+        <boxGeometry args={[3.1, 1.4, 0.1]} />
+        <meshStandardMaterial color="#334155" roughness={0.3} />
       </mesh>
 
-      {/* Door Openings / Wood Door Frames (2.20m Australian Style) */}
-      <mesh position={[0.9, 0.5, 1.8]}>
-        <boxGeometry args={[0.15, 1.0, 0.8]} />
+      {/* Australian Wood Doors (2.20m scale framing) */}
+      <mesh position={[0.8, 0.6, 1.8]}>
+        <boxGeometry args={[0.15, 1.2, 0.9]} />
         <meshStandardMaterial color="#78350f" roughness={0.2} />
       </mesh>
-      <mesh position={[0.9, 0.5, -1.8]}>
-        <boxGeometry args={[0.15, 1.0, 0.8]} />
+      <mesh position={[0.8, 0.6, -1.8]}>
+        <boxGeometry args={[0.15, 1.2, 0.9]} />
         <meshStandardMaterial color="#78350f" roughness={0.2} />
       </mesh>
 
-      {/* Furniture Placeholders */}
-      {/* Living Room Sofa */}
-      <mesh position={[-2.5, 0.25, 1.2]} castShadow>
-        <boxGeometry args={[1.2, 0.4, 2.2]} />
-        <meshStandardMaterial color="#0284c7" />
+      {/* Interior Furniture & Fixtures */}
+      {/* Modern Sectional Sofa */}
+      <mesh position={[-2.4, 0.3, 1.2]} castShadow>
+        <boxGeometry args={[1.4, 0.5, 2.4]} />
+        <meshStandardMaterial color="#0284c7" roughness={0.3} />
       </mesh>
       {/* Coffee Table */}
-      <mesh position={[-1.2, 0.15, 1.2]} castShadow>
-        <boxGeometry args={[0.8, 0.2, 1.2]} />
-        <meshStandardMaterial color="#334155" />
+      <mesh position={[-1.0, 0.2, 1.2]} castShadow>
+        <boxGeometry args={[0.9, 0.3, 1.2]} />
+        <meshStandardMaterial color="#94a3b8" metalness={0.5} roughness={0.1} />
       </mesh>
-      {/* Dining Table */}
-      <mesh position={[-2.0, 0.3, -1.4]} castShadow>
-        <boxGeometry args={[1.4, 0.4, 1.4]} />
-        <meshStandardMaterial color="#475569" />
+      {/* Dining Table Set */}
+      <mesh position={[-2.2, 0.35, -1.5]} castShadow>
+        <boxGeometry args={[1.5, 0.5, 1.5]} />
+        <meshStandardMaterial color="#64748b" roughness={0.4} />
       </mesh>
-      {/* Primary Bed */}
-      <mesh position={[2.5, 0.25, 1.5]} castShadow>
-        <boxGeometry args={[1.8, 0.4, 1.6]} />
-        <meshStandardMaterial color="#38bdf8" />
+      {/* Master Bed */}
+      <mesh position={[2.5, 0.3, 1.5]} castShadow>
+        <boxGeometry args={[2.0, 0.5, 1.8]} />
+        <meshStandardMaterial color="#38bdf8" roughness={0.4} />
       </mesh>
-      {/* Secondary Bed */}
-      <mesh position={[2.5, 0.25, -1.5]} castShadow>
-        <boxGeometry args={[1.8, 0.4, 1.6]} />
-        <meshStandardMaterial color="#38bdf8" />
+      {/* Second Bed */}
+      <mesh position={[2.5, 0.3, -1.5]} castShadow>
+        <boxGeometry args={[2.0, 0.5, 1.8]} />
+        <meshStandardMaterial color="#38bdf8" roughness={0.4} />
       </mesh>
 
-      {/* Spotlight Ceilings / Recessed Lighting Fixtures */}
-      <pointLight position={[-1.5, 2.5, 0]} intensity={1.5} color="#ffffff" />
-      <pointLight position={[2.5, 2.5, 1.5]} intensity={1.0} color="#38bdf8" />
-      <pointLight position={[2.5, 2.5, -1.5]} intensity={1.0} color="#38bdf8" />
+      {/* Architectural Spotlights & Ambient Glow */}
+      <pointLight position={[-1.6, 3.2, 0]} intensity={1.8} color="#ffffff" distance={8} />
+      <pointLight position={[2.4, 3.2, 1.5]} intensity={1.2} color="#38bdf8" distance={6} />
+      <pointLight position={[2.4, 3.2, -1.5]} intensity={1.2} color="#38bdf8" distance={6} />
     </group>
   );
 }
@@ -209,19 +208,19 @@ export default function App() {
       </header>
 
       {/* 3D Architectural Viewport Banner */}
-      <div className="w-full h-[480px] relative bg-slate-950 border-b border-slate-800">
-        <Canvas shadows camera={{ position: [8, 7, 8], fov: 45 }} style={{ width: '100%', height: '100%' }}>
+      <div className="w-full h-[500px] relative bg-slate-950 border-b border-slate-800">
+        <Canvas shadows camera={{ position: [8, 7, 9], fov: 45 }} style={{ width: '100%', height: '100%' }}>
           <color attach="background" args={['#020617']} />
-          <ambientLight intensity={0.6} />
-          <directionalLight position={[10, 15, 10]} intensity={1.2} castShadow shadow-mapSize={[2048, 2048]} />
+          <ambientLight intensity={0.7} />
+          <directionalLight position={[12, 18, 12]} intensity={1.4} castShadow shadow-mapSize={[2048, 2048]} />
           
-          <ApartmentModel />
+          <ApartmentScene />
           
-          <ContactShadows position={[0, -0.06, 0]} opacity={0.6} scale={12} blur={1.5} far={10} />
-          <OrbitControls makeDefault autoRotate autoRotateSpeed={0.5} minPolarAngle={Math.PI / 6} maxPolarAngle={Math.PI / 2.2} />
+          <ContactShadows position={[0, -0.06, 0]} opacity={0.7} scale={14} blur={1.8} far={12} />
+          <OrbitControls makeDefault autoRotate autoRotateSpeed={0.4} minPolarAngle={Math.PI / 6} maxPolarAngle={Math.PI / 2.2} />
         </Canvas>
 
-        {/* Active Selection Info Overlay */}
+        {/* Floating Card Stack / HUD Overlay */}
         <div className="absolute top-6 right-6 bg-slate-900/90 backdrop-blur border border-slate-700/80 p-4 rounded-xl shadow-2xl flex flex-col gap-1 z-10 w-72">
           <span className="text-[10px] uppercase tracking-wider text-sky-400 font-bold">Interactive 3D Floor Plan</span>
           <span className="text-base font-bold text-white">{selectedUnit.name} ({selectedUnit.size} m²)</span>
@@ -319,7 +318,7 @@ export default function App() {
                 </div>
                 <p className="text-xs text-slate-300 leading-relaxed">{unit.description}</p>
                 <div className="pt-3 border-t border-slate-800 flex justify-between items-center text-xs text-sky-400 font-medium">
-                  <span>Explore 3D Layout</span>
+                  <span>Explore 3D Model</span>
                   <span>→</span>
                 </div>
               </div>
