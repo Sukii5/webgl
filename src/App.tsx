@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stage } from '@react-three/drei';
-import { SlidersHorizontal, RotateCcw, PhoneCall, Building2, Layers, Palette, Mail } from 'lucide-react';
+import { SlidersHorizontal, RotateCcw, PhoneCall, Building2, Layers, Palette, Mail, Search } from 'lucide-react';
 
 interface Unit {
   id: string;
@@ -41,52 +41,57 @@ const UNITS: Unit[] = [
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'residences' | 'plans' | 'materials' | 'contact'>('residences');
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [maxPrice, setMaxPrice] = useState<number>(500000);
   const [minRooms, setMinRooms] = useState<number>(1);
   const [selectedUnit, setSelectedUnit] = useState<Unit>(UNITS[0]);
 
   const filteredUnits = UNITS.filter(
-    (unit) => unit.price <= maxPrice && unit.rooms >= minRooms
+    (unit) =>
+      unit.price <= maxPrice &&
+      unit.rooms >= minRooms &&
+      (unit.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+       unit.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
-    <div className="w-full h-screen bg-slate-950 text-slate-100 flex flex-col overflow-hidden font-sans">
+    <div className="w-full min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-sky-500 selection:text-white">
       {/* Header */}
-      <header className="px-6 py-4 border-b border-slate-800 bg-slate-900/80 backdrop-blur flex justify-between items-center z-10">
+      <header className="px-8 py-5 border-b border-slate-800 bg-slate-900/90 backdrop-blur flex flex-col md:flex-row justify-between items-start md:items-center gap-4 z-20">
         <div>
-          <h1 className="text-xl font-bold tracking-wider text-white">PANOSPHERE STUDIO</h1>
-          <p className="text-xs text-slate-400">Architectural 3D Virtual Showcase</p>
+          <h1 className="text-2xl font-bold tracking-wider text-white">PANOSPHERE STUDIO</h1>
+          <p className="text-xs text-slate-400 mt-0.5">Architectural 3D Virtual Showcase</p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4">
           <nav className="flex bg-slate-800/60 p-1 rounded-lg border border-slate-700/50">
             <button
               onClick={() => setActiveTab('residences')}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 ${
-                activeTab === 'residences' ? 'bg-sky-600 text-white shadow' : 'text-slate-300 hover:text-white'
+              className={`px-3.5 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 ${
+                activeTab === 'residences' ? 'bg-white text-slate-950 shadow' : 'text-slate-300 hover:text-white'
               }`}
             >
               <Building2 className="w-3.5 h-3.5" /> Residences
             </button>
             <button
               onClick={() => setActiveTab('plans')}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 ${
-                activeTab === 'plans' ? 'bg-sky-600 text-white shadow' : 'text-slate-300 hover:text-white'
+              className={`px-3.5 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 ${
+                activeTab === 'plans' ? 'bg-white text-slate-950 shadow' : 'text-slate-300 hover:text-white'
               }`}
             >
               <Layers className="w-3.5 h-3.5" /> Floor Plans
             </button>
             <button
               onClick={() => setActiveTab('materials')}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 ${
-                activeTab === 'materials' ? 'bg-sky-600 text-white shadow' : 'text-slate-300 hover:text-white'
+              className={`px-3.5 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 ${
+                activeTab === 'materials' ? 'bg-white text-slate-950 shadow' : 'text-slate-300 hover:text-white'
               }`}
             >
               <Palette className="w-3.5 h-3.5" /> Materials
             </button>
             <button
               onClick={() => setActiveTab('contact')}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 ${
-                activeTab === 'contact' ? 'bg-sky-600 text-white shadow' : 'text-slate-300 hover:text-white'
+              className={`px-3.5 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 ${
+                activeTab === 'contact' ? 'bg-white text-slate-950 shadow' : 'text-slate-300 hover:text-white'
               }`}
             >
               <Mail className="w-3.5 h-3.5" /> Contact
@@ -98,26 +103,70 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main Workspace */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar: Filters and Unit Catalog */}
-        <div className="w-96 border-r border-slate-800 bg-slate-900/40 p-6 flex flex-col gap-6 overflow-y-auto">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold tracking-wide uppercase text-slate-300 flex items-center gap-2">
+      {/* Wide Horizontal 3D Viewport Banner */}
+      <div className="w-full h-[420px] relative bg-slate-900 border-b border-slate-800">
+        <Canvas shadows camera={{ position: [6, 4, 6], fov: 45 }} style={{ width: '100%', height: '100%' }}>
+          <color attach="background" args={['#020617']} />
+          <Stage environment="city" intensity={0.9} shadows={{ type: 'contact', opacity: 0.5 }}>
+            <group position={[0, 0, 0]}>
+              <mesh position={[0, -0.1, 0]} receiveShadow>
+                <boxGeometry args={[4, 0.2, 4]} />
+                <meshStandardMaterial color="#1e293b" roughness={0.4} />
+              </mesh>
+              <mesh position={[0, 1, 0]} castShadow receiveShadow>
+                <boxGeometry args={[2.5, 2, 2.5]} />
+                <meshStandardMaterial color="#38bdf8" roughness={0.2} metalness={0.1} />
+              </mesh>
+              <mesh position={[0, 1, 1.3]} castShadow>
+                <boxGeometry args={[2.6, 2.1, 0.1]} />
+                <meshStandardMaterial color="#94a3b8" roughness={0.1} metalness={0.8} />
+              </mesh>
+            </group>
+          </Stage>
+          <OrbitControls makeDefault autoRotate autoRotateSpeed={0.8} maxPolarAngle={Math.PI / 2.1} />
+        </Canvas>
+
+        {/* Floating Card Stack / HUD Overlay in Banner */}
+        <div className="absolute top-6 right-6 bg-slate-900/90 backdrop-blur border border-slate-700/80 p-4 rounded-xl shadow-2xl flex flex-col gap-1 z-10 w-64">
+          <span className="text-[10px] uppercase tracking-wider text-sky-400 font-bold">Active Selection</span>
+          <span className="text-base font-bold text-white">{selectedUnit.name}</span>
+          <span className="text-xs text-slate-300 font-semibold">${(selectedUnit.price / 1000).toFixed(0)}k</span>
+          <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">{selectedUnit.description}</p>
+        </div>
+      </div>
+
+      {/* Main Content & Filters Section */}
+      <main className="max-w-7xl w-full mx-auto p-8 flex flex-col gap-8">
+        {/* Unit Filters Header & Controls */}
+        <div className="flex flex-col gap-4 bg-slate-900/60 border border-slate-800 p-6 rounded-2xl shadow-xl">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <h2 className="text-base font-bold tracking-wide uppercase text-slate-200 flex items-center gap-2">
               <SlidersHorizontal className="w-4 h-4 text-sky-400" /> Unit Filters
             </h2>
             <button
-              onClick={() => { setMaxPrice(500000); setMinRooms(1); }}
+              onClick={() => { setMaxPrice(500000); setMinRooms(1); setSearchQuery(''); }}
               className="text-xs text-slate-400 hover:text-white flex items-center gap-1 transition-colors"
             >
-              <RotateCcw className="w-3 h-3" /> Reset View
+              <RotateCcw className="w-3.5 h-3.5" /> Reset View
             </button>
           </div>
 
-          {/* Filter Controls */}
-          <div className="bg-slate-800/40 border border-slate-700/50 p-4 rounded-xl flex flex-col gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center pt-2 border-t border-slate-800/80">
+            {/* Search Input */}
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search suite or specs..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-slate-800/60 border border-slate-700/80 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-sky-500"
+              />
+            </div>
+
+            {/* Price Slider */}
             <div>
-              <div className="flex justify-between text-xs text-slate-400 mb-1.5">
+              <div className="flex justify-between text-xs text-slate-400 mb-2">
                 <span>Max Price</span>
                 <span className="font-semibold text-sky-400">${(maxPrice / 1000).toFixed(0)}k</span>
               </div>
@@ -132,8 +181,9 @@ export default function App() {
               />
             </div>
 
+            {/* Minimum Rooms */}
             <div>
-              <span className="text-xs text-slate-400 block mb-1.5">Minimum Rooms</span>
+              <span className="text-xs text-slate-400 block mb-2">Minimum Rooms</span>
               <div className="grid grid-cols-3 gap-2">
                 {[1, 2, 3].map((rooms) => (
                   <button
@@ -151,68 +201,41 @@ export default function App() {
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Unit List */}
-          <div className="flex flex-col gap-3">
-            <span className="text-xs font-medium text-slate-400">
-              Available Suites ({filteredUnits.length})
-            </span>
+        {/* Available Suites Grid */}
+        <div className="flex flex-col gap-4">
+          <h3 className="text-sm font-semibold text-slate-300">
+            Available Suites ({filteredUnits.length})
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredUnits.map((unit) => (
               <div
                 key={unit.id}
                 onClick={() => setSelectedUnit(unit)}
-                className={`p-4 rounded-xl border transition-all cursor-pointer flex flex-col gap-2 ${
+                className={`p-6 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between gap-4 ${
                   selectedUnit.id === unit.id
-                    ? 'bg-slate-800/80 border-sky-500 shadow-lg shadow-sky-950/50'
-                    : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
+                    ? 'bg-slate-900 border-sky-500 shadow-xl shadow-sky-950/40 ring-1 ring-sky-500/50'
+                    : 'bg-slate-900/40 border-slate-800 hover:border-slate-700'
                 }`}
               >
                 <div className="flex justify-between items-start">
-                  <h3 className="font-semibold text-white text-sm">{unit.name}</h3>
-                  <span className="text-sky-400 font-bold text-sm">${(unit.price / 1000).toFixed(0)}k</span>
+                  <div>
+                    <h4 className="font-bold text-white text-base">{unit.name}</h4>
+                    <p className="text-xs text-slate-400 mt-0.5">{unit.rooms} Rooms • {unit.size} m²</p>
+                  </div>
+                  <span className="text-sky-400 font-bold text-lg">${(unit.price / 1000).toFixed(0)}k</span>
                 </div>
-                <p className="text-xs text-slate-400">{unit.rooms} Rooms • {unit.size} m²</p>
-                <p className="text-xs text-slate-300 line-clamp-2 mt-1">{unit.description}</p>
+                <p className="text-xs text-slate-300 leading-relaxed">{unit.description}</p>
+                <div className="pt-3 border-t border-slate-800 flex justify-between items-center text-xs text-sky-400 font-medium">
+                  <span>Explore 3D View</span>
+                  <span>→</span>
+                </div>
               </div>
             ))}
           </div>
         </div>
-
-        {/* Right Area: 3D WebGL Viewport */}
-        <div className="flex-1 relative bg-slate-950 flex items-center justify-center">
-          <Canvas shadows camera={{ position: [6, 4, 6], fov: 45 }}>
-            <color attach="background" args={['#020617']} />
-            <Stage environment="city" intensity={0.8} shadows={{ type: 'contact', opacity: 0.4 }}>
-              {/* Architectural Showcase 3D Model Representation */}
-              <group position={[0, 0, 0]}>
-                {/* Base floor slab */}
-                <mesh position={[0, -0.1, 0]} receiveShadow>
-                  <boxGeometry args={[4, 0.2, 4]} />
-                  <meshStandardMaterial color="#1e293b" roughness={0.4} />
-                </mesh>
-                {/* Architectural volume */}
-                <mesh position={[0, 1, 0]} castShadow receiveShadow>
-                  <boxGeometry args={[2.5, 2, 2.5]} />
-                  <meshStandardMaterial color="#38bdf8" roughness={0.2} metalness={0.1} />
-                </mesh>
-                {/* Accent structural frame */}
-                <mesh position={[0, 1, 1.3]} castShadow>
-                  <boxGeometry args={[2.6, 2.1, 0.1]} />
-                  <meshStandardMaterial color="#94a3b8" roughness={0.1} metalness={0.8} />
-                </mesh>
-              </group>
-            </Stage>
-            <OrbitControls makeDefault autoRotate autoRotateSpeed={0.8} maxPolarAngle={Math.PI / 2.1} />
-          </Canvas>
-
-          {/* Floating HUD Overlay */}
-          <div className="absolute bottom-6 left-6 bg-slate-900/80 backdrop-blur border border-slate-800 p-4 rounded-xl shadow-2xl flex flex-col gap-1 pointer-events-none">
-            <span className="text-xs uppercase tracking-wider text-sky-400 font-semibold">Active Selection</span>
-            <span className="text-sm font-bold text-white">{selectedUnit.name}</span>
-            <span className="text-xs text-slate-300">{selectedUnit.rooms} Bedrooms • {selectedUnit.size} m² • ${(selectedUnit.price / 1000).toFixed(0)}k</span>
-          </div>
-        </div>
-      </div>
+      </main>
     </div>
   );
 }
